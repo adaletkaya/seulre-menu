@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>K-Street Lezzetleri | QR Menü</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Caveat:wght@600;700&family=Gaegu:wght@400;700&family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root{
+          --bg-navy-1:#152238;
+          --bg-navy-2:#0e3a63;
+          --card:#fdf6e3;
+          --card-alt:#fff8ea;
+          --ink:#242a3b;
+          --ink-soft:#6d7186;
+          --yellow:#ffcb47;
+          --yellow-deep:#e8960f;
+          --yellow-pale:#fff1cf;
+          --display: 'Baloo 2', system-ui, sans-serif;
+          --hand: 'Caveat', cursive;
+          --calli: 'Gaegu', cursive;
+          --body: 'Poppins', system-ui, sans-serif;
+          --mono: 'JetBrains Mono', monospace;
+        }
+
+        *{box-sizing:border-box; margin:0; padding:0;}
+        html{scroll-behavior:smooth;}
+
+        body{
+          background:
+            radial-gradient(ellipse 620px 380px at 50% -6%, rgba(255,203,71,0.16), transparent 60%),
+            linear-gradient(165deg, var(--bg-navy-1), var(--bg-navy-2));
+          color:var(--yellow-pale);
+          font-family:var(--body);
+          padding-bottom:20px;
+          -webkit-font-smoothing:antialiased;
+        }
+
+        a{color:inherit;}
+
+        /* ---------- HERO ---------- */
+        .hero{
+          position:relative;
+          padding:46px 20px 28px;
+          text-align:center;
+          overflow:hidden;
+          border-bottom:1px solid rgba(255,203,71,0.18);
+        }
+        .hero-eyebrow{
+          display:inline-block;
+          font-family:var(--body);
+          font-weight:600;
+          font-size:11.5px;
+          letter-spacing:.22em;
+          text-transform:uppercase;
+          color:var(--yellow);
+          margin-bottom:16px;
+          opacity:.85;
+        }
+        .hero-title{
+          font-family:var(--display);
+          font-weight:800;
+          font-size:clamp(2.4rem, 11vw, 3.8rem);
+          line-height:1;
+          letter-spacing:.01em;
+          color:var(--yellow);
+          text-shadow:0 4px 18px rgba(255,203,71,.35);
+        }
+        .hero-title span{ color:var(--yellow-deep); }
+        .hero-slogan{
+          margin-top:12px;
+          font-family:var(--hand);
+          font-weight:700;
+          font-size:clamp(1.4rem, 6vw, 1.9rem);
+          color:#fff6e0;
+        }
+        .hero-sub{
+          margin-top:12px;
+          font-size:12.5px;
+          color:var(--yellow-pale);
+          opacity:.55;
+          letter-spacing:.03em;
+        }
+
+        /* ---------- CATEGORY NAV (rounded pills) ---------- */
+        .cat-nav{
+          position:sticky;
+          top:0;
+          z-index:20;
+          display:flex;
+          gap:10px;
+          overflow-x:auto;
+          padding:18px 16px 16px;
+          background:rgba(21,34,56,0.92);
+          backdrop-filter:blur(8px);
+          border-bottom:1px solid rgba(255,203,71,0.15);
+          scrollbar-width:none;
+        }
+        .cat-nav::-webkit-scrollbar{display:none;}
+
+        .cat-btn{
+          flex:0 0 auto;
+          font-family:var(--display);
+          font-weight:600;
+          font-size:14px;
+          color:var(--yellow-pale);
+          background:rgba(255,255,255,0.06);
+          border:1.5px solid rgba(255,203,71,0.35);
+          border-radius:999px;
+          padding:10px 18px;
+          cursor:pointer;
+          transition:transform .15s ease, color .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
+          white-space:nowrap;
+        }
+        .cat-btn:active{ transform:scale(.96); }
+        .cat-btn.active{
+          color:var(--bg-navy-1);
+          background:var(--yellow);
+          border-color:var(--yellow);
+          box-shadow:0 4px 14px rgba(255,203,71,.4);
+        }
+
+        /* ---------- SECTIONS ---------- */
+        .menu{ padding:30px 16px 8px; max-width:780px; margin:0 auto; }
+
+        .section{ display:none; animation:fadeIn .3s ease; }
+        .section.active{ display:block; }
+        @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+
+        .section-head{
+          display:flex;
+          align-items:baseline;
+          gap:12px;
+          margin-bottom:22px;
+        }
+        .section-head h2{
+          font-family:var(--display);
+          font-weight:700;
+          font-size:28px;
+          color:var(--yellow);
+        }
+        .section-head .kr{
+          font-family:var(--mono);
+          font-size:12px;
+          color:var(--yellow-pale);
+          opacity:.5;
+        }
+
+        .grid{
+          display:grid;
+          grid-template-columns:1fr;
+          gap:20px;
+        }
+        @media (min-width:560px){
+          .grid{ grid-template-columns:1fr 1fr; }
+        }
+
+        /* ---------- CARD: clean rounded ---------- */
+        .card{
+          position:relative;
+          background:var(--card);
+          color:var(--ink);
+          padding:16px 16px 18px;
+          border-radius:26px;
+          box-shadow:0 14px 28px rgba(6,14,30,.35);
+          transition:transform .2s ease, box-shadow .2s ease;
+        }
+        .card:hover{ transform:translateY(-4px); box-shadow:0 20px 36px rgba(6,14,30,.42); }
+
+        /* photo placeholder — oval, zooms on hover/touch */
+        .card-photo-wrap{
+          position:relative;
+          z-index:1;
+          aspect-ratio:4/3;
+          width:100%;
+          overflow:hidden;
+          border-radius:50%;
+          border:3px solid var(--yellow);
+          box-shadow:0 6px 16px rgba(232,150,15,.18);
+        }
+        .card-photo{
+          width:100%;
+          height:100%;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          font-size:44px;
+          background:linear-gradient(160deg, var(--yellow-pale), var(--card-alt));
+          transition:transform .28s cubic-bezier(.34,1.56,.64,1);
+        }
+        .card-photo-wrap:hover .card-photo,
+        .card-photo-wrap:active .card-photo,
+        .card-photo-wrap:focus-within .card-photo{
+          transform:scale(1.12);
+        }
+        .card-photo-wrap span.tag{
+          position:absolute;
+          top:10px; left:10px;
+          z-index:2;
+          font-family:var(--mono);
+          font-size:9px;
+          letter-spacing:.06em;
+          text-transform:uppercase;
+          color:#fff;
+          background:rgba(36,42,59,.7);
+          padding:3px 8px;
+          border-radius:999px;
+          pointer-events:none;
+        }
+
+        .card-body{
+          padding-top:14px;
+          display:flex;
+          flex-direction:column;
+          gap:6px;
+        }
+        .card-name{
+          font-family:var(--display);
+          font-weight:700;
+          font-size:17px;
+          line-height:1.25;
+          color:var(--ink);
+        }
+        .card-desc{
+          font-family:var(--calli);
+          font-size:15px;
+          line-height:1.4;
+          color:var(--ink-soft);
+        }
+        .card-footer{
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          margin-top:10px;
+          gap:8px;
+        }
+        .card-price{
+          font-family:var(--display);
+          font-weight:800;
+          font-size:23px;
+          color:var(--yellow-deep);
+        }
+        .spice{
+          font-family:var(--hand);
+          font-weight:700;
+          font-size:14.5px;
+          color:var(--ink-soft);
+          text-align:right;
+          white-space:nowrap;
+        }
+
+        /* ---------- FOOTER ---------- */
+        footer{
+          text-align:center;
+          margin-top:38px;
+          padding:8px 16px 26px;
+        }
+        .footer-links{
+          display:flex;
+          justify-content:center;
+          flex-wrap:wrap;
+          gap:14px;
+          margin-bottom:18px;
+        }
+        .social-btn{
+          display:inline-flex;
+          align-items:center;
+          gap:8px;
+          font-family:var(--display);
+          font-weight:600;
+          font-size:13px;
+          text-decoration:none;
+          padding:11px 20px;
+          border-radius:999px;
+          transition:transform .15s ease, box-shadow .15s ease;
+        }
+        .social-btn:hover{ transform:translateY(-2px); }
+        .social-btn.insta{
+          color:var(--bg-navy-1);
+          background:var(--yellow);
+          box-shadow:0 6px 16px rgba(255,203,71,.3);
+        }
+        .social-btn.maps{
+          color:var(--yellow);
+          background:transparent;
+          border:1.5px solid var(--yellow);
+        }
+        .footer-note{
+          color:var(--yellow-pale);
+          opacity:.45;
+          font-size:11px;
+          font-family:var(--mono);
+          letter-spacing:.05em;
+        }
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <div class="hero-eyebrow">서울 스트리트 · SEOUL STREET FOOD</div>
+    <h1 class="hero-title">K-Street <span>Lezzetleri</span></h1>
+    <p class="hero-slogan">Soju Seni Bekliyor!</p>
+    <p class="hero-sub">Dijital menü · Kategoriyi seç, lezzeti keşfet</p>
+</header>
+
+<nav class="cat-nav" id="catNav">
+    <button class="cat-btn active" data-target="corndog">CornDog</button>
+    <button class="cat-btn" data-target="tavuk">Soslu Tavuk</button>
+    <button class="cat-btn" data-target="kimbap">Kimbap</button>
+    <button class="cat-btn" data-target="ramyun">Ramyun</button>
+    <button class="cat-btn" data-target="rabokki">Rabokki</button>
+    <button class="cat-btn" data-target="tteokbokki">Tteokbokki</button>
+    <button class="cat-btn" data-target="atistirmalik">Atıştırmalık</button>
+    <button class="cat-btn" data-target="icecekler">İçecekler</button>
+</nav>
+
+<main class="menu">
+
+    <!-- CORNDOG -->
+    <section class="section active" id="corndog">
+        <div class="section-head">
+            <h2>CornDog</h2>
+            <span class="kr">콘도그</span>
+        </div>
+        <div class="grid">
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🌭</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Özel Kore CornDog</h3>
+                    <p class="card-desc">Tütsülenmiş sosis, kaşar peyniri, özel CornDog tempura hamuru, panko, BBQ sos ve açaça sos.</p>
+                    <div class="card-footer">
+                        <span class="card-price">170₺</span>
+                        <span class="spice">✨ İmza Lezzet</span>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- SOSLU TAVUK -->
+    <section class="section" id="tavuk">
+        <div class="section-head">
+            <h2>Soslu Tavuk</h2>
+            <span class="kr">소스 치킨</span>
+        </div>
+        <div class="grid">
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍗</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Dynamit Soslu Tavuk</h3>
+                    <p class="card-desc">Kızarmış tavuk, Dynamit sosu ile.</p>
+                    <div class="card-footer">
+                        <span class="card-price">330₺</span>
+                        <span class="spice">🔥 Acılı</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍗</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Özel Soslu Tavuk</h3>
+                    <p class="card-desc">Kızarmış tavuk, Kore acı-tatlı sosuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">330₺</span>
+                        <span class="spice">🌶️ Acı-Tatlı</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍗</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Soya Soslu Tavuk</h3>
+                    <p class="card-desc">Kızarmış tavuk, Kore soya sosuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">310₺</span>
+                        <span class="spice">🥢 Soya</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍗</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Onion Soslu Tavuk</h3>
+                    <p class="card-desc">Kızarmış tavuk, Kore onion (soğan) sosuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">300₺</span>
+                        <span class="spice">🧅 Soğanlı</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍗</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Yan Soslu Tavuk</h3>
+                    <p class="card-desc">Kızarmış tavuk; Kore acı-tatlı sos, açaça sos ve özel soya sosu üçlüsüyle.</p>
+                    <div class="card-footer">
+                        <span class="card-price">330₺</span>
+                        <span class="spice">🍯 Üçlü Sos</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍗</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Fantastik Soslu Tavuk</h3>
+                    <p class="card-desc">Kızarmış tavuk; Kore fresh sosu, BBQ sosu ve açaça sosuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">350₺</span>
+                        <span class="spice">✨ Şef Önerisi</span>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- KIMBAP -->
+    <section class="section" id="kimbap">
+        <div class="section-head">
+            <h2>Kimbap</h2>
+            <span class="kr">김밥</span>
+        </div>
+        <div class="grid">
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍙</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Sebzeli Kimbap</h3>
+                    <p class="card-desc">Yosun, pilav, havuç, yumurta, danmuji, salam ve salatalık.</p>
+                    <div class="card-footer">
+                        <span class="card-price">275₺</span>
+                        <span class="spice">🥬 Klasik</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍙</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Ton Balıklı Kimbap</h3>
+                    <p class="card-desc">Yosun, pilav, ton balığı, havuç, yumurta ve salatalık.</p>
+                    <div class="card-footer">
+                        <span class="card-price">290₺</span>
+                        <span class="spice">🐟 Ton Balıklı</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍙</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Cheddarlı Kimbap</h3>
+                    <p class="card-desc">Yosun, pilav, cheddar, havuç, yumurta, danmuji, salam ve salatalık.</p>
+                    <div class="card-footer">
+                        <span class="card-price">295₺</span>
+                        <span class="spice">🧀 Peynirli</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍙</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Kimchi Kimbap</h3>
+                    <p class="card-desc">Yosun, pilav, havuç, yumurta, kimchi, salam ve salatalık.</p>
+                    <div class="card-footer">
+                        <span class="card-price">280₺</span>
+                        <span class="spice">🌶️ Kimchili</span>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- RAMYUN -->
+    <section class="section" id="ramyun">
+        <div class="section-head">
+            <h2>Ramyun</h2>
+            <span class="kr">라면</span>
+        </div>
+        <div class="grid">
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍜</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Acılı Ramyun</h3>
+                    <p class="card-desc">Noodle, Kore'nin yöresel tozuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">130₺</span>
+                        <span class="spice">🌶️ Acılı</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍜</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Cheddar Ramyun</h3>
+                    <p class="card-desc">Noodle, cheddar ve Kore'nin yöresel tozuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">145₺</span>
+                        <span class="spice">🧀 Peynirli</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍜</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Yumurta Ramyun</h3>
+                    <p class="card-desc">Noodle, yumurta ve Kore'nin yöresel tozuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">140₺</span>
+                        <span class="spice">🥚 Yumurtalı</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍜</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Kimchi Ramyun</h3>
+                    <p class="card-desc">Noodle, kimchi ve Kore'nin yöresel tozuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">160₺</span>
+                        <span class="spice">🌶️ Kimchili</span>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- RABOKKI -->
+    <section class="section" id="rabokki">
+        <div class="section-head">
+            <h2>Rabokki</h2>
+            <span class="kr">라볶이</span>
+        </div>
+        <div class="grid">
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🥘</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Acılı Rabokki</h3>
+                    <p class="card-desc">Noodle, Kore'nin yöresel acı sosuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">220₺</span>
+                        <span class="spice">🌶️ Acılı</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🥘</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Rose Rabokki</h3>
+                    <p class="card-desc">Noodle, krema ve Kore'nin yöresel acı sosuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">230₺</span>
+                        <span class="spice">🍶 Rose</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🥘</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Kremalı Rabokki</h3>
+                    <p class="card-desc">Noodle, krema ve Kore'nin yöresel acı sosuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">245₺</span>
+                        <span class="spice">🍶 Kremalı</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🥘</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Cheddarlı Rabokki</h3>
+                    <p class="card-desc">Noodle, cheddar ve Kore'nin yöresel acı sosuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">250₺</span>
+                        <span class="spice">🧀 Peynirli</span>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- TTEOKBOKKI -->
+    <section class="section" id="tteokbokki">
+        <div class="section-head">
+            <h2>Tteokbokki</h2>
+            <span class="kr">떡볶이</span>
+        </div>
+        <div class="grid">
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍡</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Acılı Tteokbokki</h3>
+                    <p class="card-desc">Tteok (pirinç keki), Kore'nin yöresel acı sosuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">230₺</span>
+                        <span class="spice">🌶️ Acılı</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍡</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Rose Tteokbokki</h3>
+                    <p class="card-desc">Tteok (pirinç keki), krema ve Kore'nin yöresel acı sosuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">240₺</span>
+                        <span class="spice">🍶 Rose</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍡</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Kremalı Tteokbokki</h3>
+                    <p class="card-desc">Tteok (pirinç keki), krema ve Kore'nin yöresel acı sosuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">250₺</span>
+                        <span class="spice">🍶 Kremalı</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍡</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Cheddarlı Tteokbokki</h3>
+                    <p class="card-desc">Tteok (pirinç keki), cheddar ve Kore'nin yöresel acı sosuyla.</p>
+                    <div class="card-footer">
+                        <span class="card-price">250₺</span>
+                        <span class="spice">🧀 Peynirli</span>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- ATIŞTIRMALIK -->
+    <section class="section" id="atistirmalik">
+        <div class="section-head">
+            <h2>Atıştırmalık</h2>
+            <span class="kr">분식</span>
+        </div>
+        <div class="grid">
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍤</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Gimmari</h3>
+                    <p class="card-desc">Kızarmış yosun sarma.</p>
+                    <div class="card-footer">
+                        <span class="card-price">230₺</span>
+                        <span class="spice">🌊 Çıtır</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🥟</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Hoppang</h3>
+                    <p class="card-desc">Kore'nin yöresel mantısı.</p>
+                    <div class="card-footer">
+                        <span class="card-price">220₺</span>
+                        <span class="spice">♨️ Sıcak</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🥒</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Kore Turşusu</h3>
+                    <p class="card-desc">100 g fermente Kore turşusu.</p>
+                    <div class="card-footer">
+                        <span class="card-price">80₺</span>
+                        <span class="spice">🫙 100 g</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍚</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Özel Kore Pilavı</h3>
+                    <p class="card-desc">120 g özel baharatlı Kore pilavı.</p>
+                    <div class="card-footer">
+                        <span class="card-price">70₺</span>
+                        <span class="spice">🍚 120 g</span>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- İÇECEKLER -->
+    <section class="section" id="icecekler">
+        <div class="section-head">
+            <h2>İçecekler</h2>
+            <span class="kr">음료</span>
+        </div>
+        <div class="grid">
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍉</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Cool Mint</h3>
+                    <p class="card-desc">Karpuz püresi, taze nane ve lime-limon; %100 doğal ve el yapımı.</p>
+                    <div class="card-footer">
+                        <span class="card-price">85₺</span>
+                        <span class="spice">🌿 El Yapımı</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🥤</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Cola</h3>
+                    <p class="card-desc">Pepsi Cola, 300 ml.</p>
+                    <div class="card-footer">
+                        <span class="card-price">75₺</span>
+                        <span class="spice">🧊 300 ml</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🧃</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Yedigün</h3>
+                    <p class="card-desc">Yedigün, 300 ml.</p>
+                    <div class="card-footer">
+                        <span class="card-price">75₺</span>
+                        <span class="spice">🧊 300 ml</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🥤</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">7UP</h3>
+                    <p class="card-desc">7Up, 300 ml.</p>
+                    <div class="card-footer">
+                        <span class="card-price">75₺</span>
+                        <span class="spice">🧊 300 ml</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🍋</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Lipton Ice Tea</h3>
+                    <p class="card-desc">Lipton Ice Tea, 330 ml.</p>
+                    <div class="card-footer">
+                        <span class="card-price">75₺</span>
+                        <span class="spice">🧊 330 ml</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🥤</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Pepsi Max</h3>
+                    <p class="card-desc">Pepsi Zero Sugar, 300 ml.</p>
+                    <div class="card-footer">
+                        <span class="card-price">75₺</span>
+                        <span class="spice">🧊 Şekersiz</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">💧</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Su</h3>
+                    <p class="card-desc">Doğal kaynak suyu, 500 ml.</p>
+                    <div class="card-footer">
+                        <span class="card-price">22₺</span>
+                        <span class="spice">💧 500 ml</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🧃</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Tropicana Meyve Suyu</h3>
+                    <p class="card-desc">Tropicana meyve suyu çeşitleri.</p>
+                    <div class="card-footer">
+                        <span class="card-price">75₺</span>
+                        <span class="spice">🍊 Çeşitli</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card-photo-wrap"><span class="tag">📷 Foto Alanı</span><div class="card-photo">🥛</div></div>
+                <div class="card-body">
+                    <h3 class="card-name">Ayran</h3>
+                    <p class="card-desc">Ayran, 175 ml.</p>
+                    <div class="card-footer">
+                        <span class="card-price">40₺</span>
+                        <span class="spice">🥛 175 ml</span>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <div class="footer-links">
+        <a class="social-btn insta" href="https://www.instagram.com/kstreetlezzetleri" target="_blank" rel="noopener">📸 Instagram'da Takip Et</a>
+        <a class="social-btn maps" href="https://maps.google.com/?q=K-Street+Lezzetleri" target="_blank" rel="noopener">📍 Google Haritalar'da Aç</a>
+    </div>
+    <p class="footer-note">K-STREET LEZZETLERİ · GÜNCEL FİYATLAR MENÜDE GEÇERLİDİR</p>
+</footer>
+
+<script>
+    const buttons = document.querySelectorAll('.cat-btn');
+    const sections = document.querySelectorAll('.section');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.target).classList.add('active');
+        btn.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+      });
+    });
+</script>
+
+</body>
+</html>
